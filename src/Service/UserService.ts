@@ -139,4 +139,59 @@ export class UserService extends Service {
         return exist
     }
 
+    /**
+     * 刪除一筆用戶
+     * @param id:用戶_id
+     * @returns resp<any>
+     */
+    public async deleteById(id:string){
+        const resp:resp<any> = {
+            code: 200,
+            message: "",
+            body: undefined
+        }
+
+        try {
+            const res = await studentsModel.deleteOne({_id:id});
+            resp.message = "sucess";
+            resp.body = res;
+        } catch (error) {
+            resp.message = error as string;
+            resp.code = 500;
+        }
+        return resp;
+    }
+
+    /**
+     * 更新一筆用戶名
+     * @param id uid
+     * @param name 新名字
+     * @returns 狀態
+     */
+    public async updateNameByID(id:string,name:string){
+        const resp:resp<DBResp<Student>|string> = {
+            code: 200,
+            message: "",
+            body: ""
+        }
+
+        const user = await studentsModel.findById(id)
+
+        if (user) {
+            try {
+                user.name = name;
+                await user.save();
+                resp.body = user;
+                resp.message = "update succes";
+            } catch (error) {
+                resp.code = 500;
+                resp.message = "server error";
+            }
+        }else{
+            resp.code = 404;
+            resp.message = "user not found";
+        }
+
+        return resp;
+    }
 }

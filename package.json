@@ -2,7 +2,6 @@
   "dependencies": {
     "@google-cloud/dialogflow": "^5.4.0",
     "@types/crypto-js": "^4.2.2",
-    "@types/express": "^4.17.16",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/mongoose": "^5.11.97",
     "@types/multer": "^1.4.7",
@@ -10,7 +9,7 @@
     "compressing": "^1.10.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.17.3",
+    "express": "^4.21.1",
     "fs": "^0.0.1-security",
     "http": "0.0.1-security",
     "http-errors": "~1.6.3",
@@ -30,6 +29,7 @@
   "main": "build/app.js",
   "devDependencies": {
     "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.21",
     "@types/jasmine": "^4.3.1",
     "@types/jquery": "^3.5.16",
     "concurrently": "^7.6.0",

@@ -17,7 +17,6 @@ export const DB = new MongoDB({
 });
 
 app.use(cors({
-  // "origin": "https://sec.ethci.app",
   "origin": "*",
   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
   "preflightContinue": false,
