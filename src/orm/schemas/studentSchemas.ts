@@ -10,6 +10,6 @@ export const studentsSchemas = new Schema<Student>({
     class:{ type: String, required: true },
     Email:{ type: String, required: true },
     absences:{ type: Number, required: false },
-});
+},{ collection: 'studentlist' });
 
-export const studentsModel = model<Student>('students', studentsSchemas);
+export const studentsModel = model<Student>('studentlist', studentsSchemas);
