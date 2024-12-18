@@ -1,7 +1,8 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import { Student } from "../../interfaces/Student";
 
 export const studentsSchemas = new Schema<Student>({
+    _id: { type: Types.ObjectId, auto: true },
     userName:{ type: String, required: true },
     sid:{ type: String, required: true },
     name:{ type: String, required: true },

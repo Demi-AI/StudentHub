@@ -15,15 +15,17 @@ type seatInfo = {
 
 export class UserService extends Service {
 
-    public async getAllStudents(): Promise<Array<DBResp<Student>>|undefined> {
+    public async findAll(): Promise<Array<DBResp<Student>>> {
         try {
-            const res:Array<DBResp<Student>> = await studentsModel.find({});
-            return res;
+            // 查詢所有學生
+            const students: Array<DBResp<Student>> = await studentsModel.find({});
+            return students;
         } catch (error) {
-            return undefined;
+            // 捕獲並記錄錯誤
+            console.error("Error fetching students from database:", error);
+            throw new Error("Database query failed");
         }
-        
-    }
+    }    
 
     /**
      * 新增學生
@@ -32,7 +34,7 @@ export class UserService extends Service {
      */
     public async insertOne(info: Student): Promise<resp<DBResp<Student>|undefined>>{
 
-        const current = await this.getAllStudents()
+        const current = await this.findAll()
         const resp:resp<DBResp<Student>|undefined> = {
             code: 200,
             message: "",
@@ -126,7 +128,7 @@ export class UserService extends Service {
      * @returns boolean
      */
     public async existingSeatNumbers(SeatNumber:string):Promise<boolean>{
-        const students = await this.getAllStudents();
+        const students = await this.findAll();
         let exist = false
         if (students) {
             students.forEach((student)=>{
@@ -161,35 +163,43 @@ export class UserService extends Service {
         }
         return resp;
     }
-
+    
     /**
-     * 更新一筆用戶名
-     * @param id uid
-     * @param name 新名字
+     * 更新一筆用戶的所有資料
+     * @param id 用戶_id
+     * @param info 新的學生資料
      * @returns 狀態
      */
-    public async updateNameByID(id:string,name:string){
-        const resp:resp<DBResp<Student>|string> = {
+    public async updateNameByID(id: string, info: Student): Promise<resp<DBResp<Student> | undefined>> {
+        const resp: resp<DBResp<Student> | undefined> = {
             code: 200,
             message: "",
-            body: ""
-        }
+            body: undefined
+        };
 
-        const user = await studentsModel.findById(id)
+        try {
+            // 使用 findByIdAndUpdate 方法直接更新數據
+            const user = await studentsModel.findByIdAndUpdate(
+                id, 
+                info, 
+                { new: true, runValidators: true } // 返回更新後的文檔並運行驗證器
+            );
 
-        if (user) {
-            try {
-                user.name = name;
-                await user.save();
+            if (user) {
                 resp.body = user;
-                resp.message = "update succes";
-            } catch (error) {
-                resp.code = 500;
-                resp.message = "server error";
+                resp.message = "Update successful";
+            } else {
+                resp.code = 404;
+                resp.message = "User not found";
             }
-        }else{
-            resp.code = 404;
-            resp.message = "user not found";
+        } catch (error) {
+            resp.code = 500;
+            if (error instanceof Error) {
+                resp.message = `Server error: ${error.message}`;
+            } else {
+                resp.message = "Unknown server error occurred";
+            }
+            console.error("Error updating student data:", error);
         }
 
         return resp;

@@ -14,26 +14,36 @@ export class UserController extends Contorller {
         this.service = new UserService();
     }
 
-    public async findAll(Request: Request, Response: Response) {
-
-        const res: resp<Array<DBResp<Student>> | undefined> = {
+    public async findAll(req: Request, res: Response) {
+        const response: resp<Array<DBResp<Student>> | undefined> = {
             code: 200,
             message: "",
             body: undefined
+        };
+    
+        try {
+            // 獲取學生數據
+            const students = await this.service.findAll();
+    
+            if (students && students.length > 0) {
+                response.body = students;
+                response.message = "Students retrieved successfully.";
+                return res.status(200).send(response);
+            } else {
+                // 如果數據為空
+                response.code = 404;
+                response.message = "No students found.";
+                return res.status(404).send(response);
+            }
+        } catch (error) {
+            // 捕獲服務器錯誤
+            console.error("Error retrieving students:", error);
+            response.code = 500;
+            response.message = "Internal server error.";
+            return res.status(500).send(response);
         }
-
-        const dbResp = await this.service.getAllStudents();
-        if (dbResp) {
-            res.body = dbResp;
-            res.message = "find sucess";
-            Response.send(res);
-        } else {
-            res.code = 500;
-            res.message = "server error";
-            Response.status(500).send(res);
-        }
-
     }
+    
 
     public async insertOne(Request: Request, Response: Response) {
         const resp = await this.service.insertOne(Request.body)
@@ -44,9 +54,9 @@ export class UserController extends Contorller {
         Response.status(resp.code).send(resp)
     }
     public async updateNameByID(Request: Request, Response: Response) {
-        const resp = await this.service.updateNameByID(Request.body.id,Request.body.name)
+        console.log('Request Body:', Request.body);  // 打印請求的body
+        const resp = await this.service.updateNameByID(Request.body.id,Request.body)
         Response.status(resp.code).send(resp)
     }
-
 
 }

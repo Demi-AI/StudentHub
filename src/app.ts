@@ -21,7 +21,8 @@ app.use(cors({
   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
   "preflightContinue": false,
   "optionsSuccessStatus": 200,
-  "exposedHeaders": ['Content-Disposition']
+  "exposedHeaders": ['Content-Disposition'],
+  credentials: true
 }))
 
 app.use(express.json({limit:'50mb'}));
