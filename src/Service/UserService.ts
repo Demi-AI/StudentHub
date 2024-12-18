@@ -179,7 +179,7 @@ export class UserService extends Service {
         try {
             // 使用 findByIdAndUpdate 方法直接更新數據
             const user = await studentsModel.findByIdAndUpdate({ _id: id }, info, { new: true });
-
+    
             if (user) {
                 resp.body = user;
                 resp.message = "Update successful";
@@ -189,10 +189,10 @@ export class UserService extends Service {
             }
         } catch (error) {
             resp.code = 500;
-            resp.message =  "Server error";
+            resp.message = "Server error";
             console.error('Error updating student data:', error);
         }
-
+    
         return resp;
-    }
+    }    
 }
