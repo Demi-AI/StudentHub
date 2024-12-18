@@ -176,14 +176,9 @@ export class UserService extends Service {
             message: "",
             body: undefined
         };
-
         try {
             // 使用 findByIdAndUpdate 方法直接更新數據
-            const user = await studentsModel.findByIdAndUpdate(
-                id, 
-                info, 
-                { new: true, runValidators: true } // 返回更新後的文檔並運行驗證器
-            );
+            const user = await studentsModel.findByIdAndUpdate({ _id: id }, info, { new: true });
 
             if (user) {
                 resp.body = user;
@@ -194,12 +189,8 @@ export class UserService extends Service {
             }
         } catch (error) {
             resp.code = 500;
-            if (error instanceof Error) {
-                resp.message = `Server error: ${error.message}`;
-            } else {
-                resp.message = "Unknown server error occurred";
-            }
-            console.error("Error updating student data:", error);
+            resp.message =  "Server error";
+            console.error('Error updating student data:', error);
         }
 
         return resp;
